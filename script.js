@@ -1,53 +1,117 @@
-function gameBoard() { // tworzenie planszy do gry
-    const size = 3
-    const board = [];
+function createBoard(){
+    const rows = 3;
+    const columns = 3;
+    let board = [];
 
-    for (let i = 0; i < size; i++) {
+    for(let i = 0; i < rows; i++) {
         board[i] = [];
-        for (let j = 0; j < size; j++) {
-            board[i].push(0);
+        for (let j = 0; j < columns; j++) {
+            board[i][j] = cell();
         }
     }
 
-    return board
+    const printBoard = () => board;
+
+    return {printBoard};
+}
+
+const getBoard = createBoard();
+
+function cell(){
+    let value = "";
+    return value;
+}
+
+function checkWin(){
+    const board = updateBoard();
+    const currentBoard= board.printUpdatedBoard();
+    let win = false;
+
+    for (let i = 0; i <currentBoard.length; i++) { //check rows
+
+        if (currentBoard[i][0] === currentBoard[i][1] && currentBoard[i][0] === currentBoard[i][2] && currentBoard[i][0] !== "") {
+            console.log("row Win");
+            console.log(`Wining combination ${currentBoard[i][0]} ${currentBoard[i][1]} ${currentBoard[i][2]}`);
+            win = true;
+            return win;
+        }
+    }
+
+    for (let i = 0; i <currentBoard.length; i++) { // check columns
+
+        if(currentBoard[0][i] === currentBoard[1][i] && currentBoard[0][i] === currentBoard[2][i] && currentBoard[0][i] !== ""){
+            console.log("Column win");
+            console.log(`Wining combination ${currentBoard[0][i]} ${currentBoard[1][i]} ${currentBoard[2][i]}`);
+            win = true;
+            return;
+        }
+    }
+    if(currentBoard[0][0] === currentBoard[1][1] && currentBoard[0][0] === currentBoard[2][2] && currentBoard[0][0] !== ""){ // checking diagonal
+        console.log("Skos 1");
+        win = true;
+        return win;
+    }else if(currentBoard[0][2] === currentBoard[1][1] && currentBoard[0][2] === currentBoard [2][0] && currentBoard[0][2] !== ""){ // checking diagonal
+        console.log("Skos 2");
+        win = true;
+        return win;}
+    return win;
+}
+
+function updateBoard(imput){
+
+    const board = getBoard.printBoard();
+    const row = prompt("Row");
+    const column = prompt("Column");
+    board[row][column] = imput;
+
+
+    const printUpdatedBoard = () => board;
+    return{printUpdatedBoard};
 }
 
 
-
-function createPlayers(player1 = "Player1", player1Tag = "X", player2Tag = "O", player2 = "Player2") { //tworzenie gracza
+function createPlayer(player1 = "Player .1", player2 = "Player .2"){ //tworzy gracza
     const players = [
-        {
-            name: player1,
-            tag: player1Tag,
-        },
-        {
-            name: player2,
-            tag: player2Tag,
-        }
-    ];
-    return players;
+        {name: player1,
+        tag: "X"},
+        {name: player2,
+        tag: "O"},
+    ]
+    const firstPlayerName =  players[0].name;
+    const secondPlayerName =  players[1].name;
+    const firstPlayerTag =   players[0].tag;
+    const secondPlayerTag =  players[1].tag;
+
+    return {firstPlayerName, secondPlayerName, firstPlayerTag, secondPlayerTag }; //zwraca dane pierwszego i drugiego gracza
 }
 
-function checkingWin() {
+function changePlayerTurn(roundTracking){
+    const players = createPlayer();
+    const firstPlayer = players.firstPlayerTag;
 
-    board = gameBoard();
-    console.log(board.length);
+    const secondPlayer = players.secondPlayerTag;
+    let actualPlayer;
+    if(roundTracking % 2 === 0){
+        actualPlayer = firstPlayer;
+    }else if(roundTracking % 2 !== 0){
+        actualPlayer = secondPlayer;
+    }
 
-    for (let i = 0; i < board.length; i++) { //sprawdzenie rzędów
-        if (board[i][0] === board[i][1] && board[i][0] === board[i][2] && board[i][0] !== 0) {
-            console.log("Rząd wygrana");
-            return true;
-        } else if (board[0][i] === board[1][i] && board[0][i] === board[2][i] && board[0][i] !== 0) { //sprawdzenie kolumn
-            console.log("Kolumna wygrana");
-            return true;
-        }
-    }
-    if (board[0][0] === board[1][1] && board[0][0] === board[2][2] && board[0][0] !== 0) { // sprawdzenie skosów
-        return true;
-    }
-    else if (board[0][2] === board[1][1] && board[0][2] === board[2][0] && board[0][2] !== 0) {
-        return true;
-    }
-    return false;
+    return actualPlayer;
 }
-checkingWin();
+
+function game(){
+    let round = 1;
+
+    while(checkWin() === false){
+        round++;
+        console.log(getBoard.printBoard());
+
+        console.log(changePlayerTurn(round));
+        checkWin();
+
+    }
+
+}
+
+game()
