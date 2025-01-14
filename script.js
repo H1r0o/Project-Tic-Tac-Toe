@@ -1,3 +1,7 @@
+const button = document.getElementById("testButton");
+
+button.addEventListener("click", game)
+
 function createBoard(){
     const rows = 3;
     const columns = 3;
@@ -43,7 +47,7 @@ function checkWin(){
             console.log("Column win");
             console.log(`Wining combination ${currentBoard[0][i]} ${currentBoard[1][i]} ${currentBoard[2][i]}`);
             win = true;
-            return;
+            return win;
         }
     }
     if(currentBoard[0][0] === currentBoard[1][1] && currentBoard[0][0] === currentBoard[2][2] && currentBoard[0][0] !== ""){ // checking diagonal
@@ -86,9 +90,9 @@ function createPlayer(player1 = "Player .1", player2 = "Player .2"){ //tworzy gr
 }
 
 function changePlayerTurn(roundTracking){
-    const players = createPlayer();
+    const players= createPlayer();
     const firstPlayer = players.firstPlayerTag;
-
+    console.log(`round ${roundTracking}`);
     const secondPlayer = players.secondPlayerTag;
     let actualPlayer;
     if(roundTracking % 2 === 0){
@@ -101,17 +105,37 @@ function changePlayerTurn(roundTracking){
 }
 
 function game(){
-    let round = 1;
+    let round = 0;
 
-    while(checkWin() === false){
+    console.log("round" + round)
+    if(checkWin() === false){
         round++;
-        console.log(getBoard.printBoard());
-
-        console.log(changePlayerTurn(round));
-        checkWin();
+        console.log(`Turn player ${changePlayerTurn(round)}`);
+        displayBoardInConsole();
+        updateBoard(changePlayerTurn(round));
 
     }
+}
+
+function displayBoardInConsole(){
+    const array = getBoard.printBoard();
+    const uL = array[0][0];
+    const uC = array[0][1];
+    const uR = array[0][2];
+    const cL = array[1][0];
+    const cC = array[1][1];
+    const cR = array[1][2];
+    const dL = array[2][0];
+    const dC = array[2][1];
+    const dR = array[2][2];
+    console.log(` ${uL} | ${uC} | ${uR}`)
+    console.log(` ${cL} | ${cC} | ${cR}`)
+    console.log(` ${dL} | ${dC} | ${dR}`)
 
 }
 
-game()
+function getUserInput(r, c){
+    let row  = r;
+    let column = c;
+    return {row, column};
+}
