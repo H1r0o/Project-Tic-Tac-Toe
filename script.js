@@ -1,10 +1,13 @@
 const board = createBoard();
 let userTurn = document.getElementById("userTurn");
-let round = 1;
+let round = 0;
 let gameRunning = false;
 let player1Name;
 let player2Name;
 const players = createPlayer();
+
+let currentPlayer;
+
 const startBtn = document.querySelector("#start");
 startBtn.addEventListener("click", () => {
     gameRunning = true;
@@ -31,11 +34,13 @@ function createBoard() {
     return { printBoard, updateBoard };
 }
 
-function checkWin(board) {
+function checkWin(board, currentPlayer) {
     const currentBoard = board.printBoard();
     let win = false;
+
     for (let i = 0; i < currentBoard.length; i++) { //check rows
         if (currentBoard[i][0] === currentBoard[i][1] && currentBoard[i][0] === currentBoard[i][2] && currentBoard[i][0] !== " ") {
+            userTurn.innerText = `Wygrywa gracz ${currentPlayer.name}`;
             gameRunning = false;
             win = true;
             return win;
@@ -44,16 +49,19 @@ function checkWin(board) {
     for (let i = 0; i < currentBoard.length; i++) { // check columns
 
         if (currentBoard[0][i] === currentBoard[1][i] && currentBoard[0][i] === currentBoard[2][i] && currentBoard[0][i] !== " ") {
+            userTurn.innerText = `Wygrywa gracz ${currentPlayer.name}`;
             gameRunning = false;
             win = true;
             return win;
         }
     }
     if (currentBoard[0][0] === currentBoard[1][1] && currentBoard[0][0] === currentBoard[2][2] && currentBoard[0][0] !== " ") { // checking diagonal
+        userTurn.innerText = `Wygrywa gracz ${currentPlayer.name}`;
         gameRunning = false;
         win = true;
         return win;
     } else if (currentBoard[0][2] === currentBoard[1][1] && currentBoard[0][2] === currentBoard[2][0] && currentBoard[0][2] !== " ") { // checking diagonal
+        userTurn.innerText = `Wygrywa gracz ${currentPlayer.name}`;
         gameRunning = false;
         win = true;
         return win;
@@ -69,16 +77,17 @@ function createPlayer(player1 = "Player .1", player2 = "Player .2") { //tworzy g
     ]; //zwraca dane pierwszego i drugiego gracza
 };
 
-function game(targetRow, targetColumn) {
+function game(targetRow, targetColumn, cell) {
     if (!gameRunning) return;
-    let currentPlayer = players[(round - 1) % 2];
     if (board.printBoard()[targetRow][targetColumn] === " ") {
+        let currentPlayer = players[round % 2];
         board.updateBoard(targetRow, targetColumn, currentPlayer.tag);
+        cell.innerHTML = `<h3>${currentPlayer.tag}</h3>`;
+        userTurn.innerText = `Tura gracza ${currentPlayer.name}`
         displayBoardInConsole(board);
 
-        if (checkWin(board)) {
+        if (checkWin(board, currentPlayer)) {
             console.log(`${currentPlayer.name} wins!`);
-            userTurn.innerText = `Win player: ${currentPlayer.name}`;
             gameRunning = false;
             return;
         }
@@ -92,8 +101,6 @@ function game(targetRow, targetColumn) {
 
         // Przełącz gracza po zakończeniu ruchu
         round++;
-        console.log(`Teraz ruch gracza: ${currentPlayer.name}`);
-        userTurn.innerText = `Turn player: ${currentPlayer.name}`;
 
     } else {
         console.log("To pole jest już zajęte!");
@@ -127,14 +134,9 @@ function gettingElementId() {
     cells.forEach(cell => {
         cell.addEventListener("click", (e) => {
             if (!gameRunning) return;
-
             targetRow = parseInt(e.target.id.charAt(0));
             targetColumn = parseInt(e.target.id.charAt(1));
-
-            game(targetRow, targetColumn);
-            let player = players[round % 2];
-            cell.innerHTML = `<h3>${player.tag}</h3>`;
-            board.updateBoard(targetRow, targetColumn, player.tag);
+            game(targetRow, targetColumn, cell);
 
         });
 
@@ -155,7 +157,8 @@ function restartGame() {
     }
     board.printBoard();
     gameRunning = true;
-    round = 1;
+    round = 0;
+    userTurn.innerText = `Tura gracza ${players[round % 2].name}`;
     createBoard();
 }
 
