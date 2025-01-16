@@ -3,7 +3,7 @@ body {
 }
 
 .cell {
-    border: 1px solid rgb(161, 119, 3);
+    border: 2px solid rgb(0, 0, 0);
     width: 100px;
     height: 100px;
 }
@@ -50,10 +50,10 @@ button {
     margin: 0;
 }
 
-.cell1 {
+.cell0 {
     color: blue;
 }
 
-.cell2 {
+.cell1 {
     color: red;
 }

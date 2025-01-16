@@ -82,18 +82,21 @@ function checkWin(board, currentPlayer) {
 
 function createPlayer(player1 = "Player .1", player2 = "Player .2") { //tworzy gracza
     return [
-        { name: player1, tag: "O" },
-        { name: player2, tag: "X" },
+        { name: player1, tag: "O", color: 0 },
+        { name: player2, tag: "X", color: 1 },
     ]; //zwraca dane pierwszego i drugiego gracza
 };
 
 function game(targetRow, targetColumn, cell) {
     if (!gameRunning) return;
+    let color = 1;
     if (board.printBoard()[targetRow][targetColumn] === " ") {
+        color++;
         let currentPlayer = players[round % 2];
         let winner = players[(round - 1) % 2];
         board.updateBoard(targetRow, targetColumn, currentPlayer.tag);
-        cell.innerHTML = `<h3>${currentPlayer.tag}</h3>`;
+        cell.innerHTML = `<h3 class=cell${currentPlayer.color}>${currentPlayer.tag}</h3>`;
+        // cell.classList.add(`cell${round % 2}`)
         userTurn.innerText = `Tura gracza ${currentPlayer.name}`
         displayBoardInConsole(board);
 
