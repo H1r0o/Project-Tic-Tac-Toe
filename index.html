@@ -4,27 +4,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <title>Project: Tic Tac Toe</title>
 </head>
 
 <body>
-    Name Player .1<input id="player1" type="text" />
-    Name Player .2<input id="player2" type="text" />
-    <div id="gameBoardGrid">
-        <div id="00cell" class="cell"></div>
-        <div id="01cell" class="cell"></div>
-        <div id="02cell" class="cell"></div>
-        <div id="10cell" class="cell"></div>
-        <div id="11cell" class="cell"></div>
-        <div id="12cell" class="cell"></div>
-        <div id="20cell" class="cell"></div>
-        <div id="21cell" class="cell"></div>
-        <div id="22cell" class="cell"></div>
+    <div id="container">
+        Name Player .1<input id="player1" class="playerInput" required type="text" />
+        Name Player .2<input id="player2" class="playerInput" required type="text" />
+        <div id="gameBoardGrid">
+            <div id="00cell" class="cell"></div>
+            <div id="01cell" class="cell"></div>
+            <div id="02cell" class="cell"></div>
+            <div id="10cell" class="cell"></div>
+            <div id="11cell" class="cell"></div>
+            <div id="12cell" class="cell"></div>
+            <div id="20cell" class="cell"></div>
+            <div id="21cell" class="cell"></div>
+            <div id="22cell" class="cell"></div>
+        </div>
+        <div id="buttonContainer">
+            <button id="start">Set Names</button>
+            <button id="reset">Reset</button>
+        </div>
+        <div id="userTurn"></div>
     </div>
-    <button id="start">Start</button>
-    <button id="reset">Reset</button>
-    <div id="userTurn"></div>
+
     <script src="script.js"></script>
 </body>
 

@@ -1,21 +1,31 @@
 const board = createBoard();
 let userTurn = document.getElementById("userTurn");
-let round = 0;
+let round = 1;
 let gameRunning = false;
-let player1Name;
-let player2Name;
-const players = createPlayer();
+let players;
 
 let currentPlayer;
 
 const startBtn = document.querySelector("#start");
 startBtn.addEventListener("click", () => {
+    let player1 = document.getElementById("player1").value;
+    let player2 = document.getElementById("player2").value;
+    if (player1 === "") {
+        player1 = "TestPlayer1"
+    }
+    if (player2 === "") {
+        player2 = "TestPlayer2"
+    }
+    players = createPlayer(player1, player2);
     gameRunning = true;
     gettingElementId();
 });
 
 const restartBtn = document.querySelector("#reset");
-restartBtn.addEventListener("click", () => restartGame())
+restartBtn.addEventListener("click", () => {
+    if (gameRunning) return;
+    restartGame();
+})
 
 function createBoard() {
     const rows = 3;
@@ -72,8 +82,8 @@ function checkWin(board, currentPlayer) {
 
 function createPlayer(player1 = "Player .1", player2 = "Player .2") { //tworzy gracza
     return [
-        { name: player1, tag: "X" },
-        { name: player2, tag: "O" },
+        { name: player1, tag: "O" },
+        { name: player2, tag: "X" },
     ]; //zwraca dane pierwszego i drugiego gracza
 };
 
@@ -81,12 +91,13 @@ function game(targetRow, targetColumn, cell) {
     if (!gameRunning) return;
     if (board.printBoard()[targetRow][targetColumn] === " ") {
         let currentPlayer = players[round % 2];
+        let winner = players[(round - 1) % 2];
         board.updateBoard(targetRow, targetColumn, currentPlayer.tag);
         cell.innerHTML = `<h3>${currentPlayer.tag}</h3>`;
         userTurn.innerText = `Tura gracza ${currentPlayer.name}`
         displayBoardInConsole(board);
 
-        if (checkWin(board, currentPlayer)) {
+        if (checkWin(board, winner)) {
             console.log(`${currentPlayer.name} wins!`);
             gameRunning = false;
             return;
@@ -157,8 +168,9 @@ function restartGame() {
     }
     board.printBoard();
     gameRunning = true;
-    round = 0;
-    userTurn.innerText = `Tura gracza ${players[round % 2].name}`;
+    round = 1;
+    let player = players[(round - 1) % 2]
+    userTurn.innerText = `Tura gracza ${player.name}`;
     createBoard();
 }
 

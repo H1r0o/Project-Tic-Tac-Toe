@@ -1,5 +1,9 @@
+body {
+    font-family: "Roboto", serif;
+}
+
 .cell {
-    border: 1px solid black;
+    border: 1px solid rgb(161, 119, 3);
     width: 100px;
     height: 100px;
 }
@@ -7,4 +11,49 @@
 #gameBoardGrid {
     display: grid;
     grid-template-columns: 100px 100px 100px;
+}
+
+#container {
+    height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    font-size: 1.5rem;
+}
+
+.playerInput {
+    margin-bottom: 20px;
+    height: 30px;
+    width: 200px;
+    text-align: center;
+    font-size: 1.3rem;
+}
+
+button {
+    font-size: 1.2rem;
+    width: 150px;
+    height: 50px;
+    margin-top: 20px;
+}
+
+.cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+}
+
+.cell>h3 {
+    font-size: 4rem;
+    margin: 0;
+}
+
+.cell1 {
+    color: blue;
+}
+
+.cell2 {
+    color: red;
 }
