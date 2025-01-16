@@ -4,6 +4,9 @@ let round = 1;
 let gameRunning = false;
 let players;
 
+let scorePlayer1 = document.getElementById("scorePlayer1");
+let scorePlayer2 = document.getElementById("scorePlayer2");
+
 let currentPlayer;
 
 const startBtn = document.querySelector("#start");
@@ -82,8 +85,8 @@ function checkWin(board, currentPlayer) {
 
 function createPlayer(player1 = "Player .1", player2 = "Player .2") { //tworzy gracza
     return [
-        { name: player1, tag: "O", color: 0 },
-        { name: player2, tag: "X", color: 1 },
+        { name: player1, tag: "O", color: 0, score: 0 },
+        { name: player2, tag: "X", color: 1, score: 0 },
     ]; //zwraca dane pierwszego i drugiego gracza
 };
 
@@ -97,11 +100,12 @@ function game(targetRow, targetColumn, cell) {
         board.updateBoard(targetRow, targetColumn, currentPlayer.tag);
         cell.innerHTML = `<h3 class=cell${currentPlayer.color}>${currentPlayer.tag}</h3>`;
         // cell.classList.add(`cell${round % 2}`)
-        userTurn.innerText = `Tura gracza ${currentPlayer.name}`
+        userTurn.innerText = `Tura gracza: ${currentPlayer.name}`
         displayBoardInConsole(board);
 
         if (checkWin(board, winner)) {
             console.log(`${currentPlayer.name} wins!`);
+
             gameRunning = false;
             return;
         }
@@ -173,7 +177,7 @@ function restartGame() {
     gameRunning = true;
     round = 1;
     let player = players[(round - 1) % 2]
-    userTurn.innerText = `Tura gracza ${player.name}`;
+    userTurn.innerText = `Tura gracza: ${player.name}`;
     createBoard();
 }
 
