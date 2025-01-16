@@ -1,18 +1,18 @@
-const button = document.getElementById("testButton");
-
-button.addEventListener("click", game);
-
-const cells = document.querySelectorAll(".cell");
-cells.forEach(cell => {
-    cell.addEventListener("click", (e) => {
-        e.target.innerHTML = `<h3>${e.target.getAttribute('id')}</h3>`;
-
-    });
-
+const board = createBoard();
+let userTurn = document.getElementById("userTurn");
+let round = 1;
+let gameRunning = false;
+let player1Name;
+let player2Name;
+const players = createPlayer();
+const startBtn = document.querySelector("#start");
+startBtn.addEventListener("click", () => {
+    gameRunning = true;
+    gettingElementId();
 });
 
-const board = createBoard();
-let round = 0;
+const restartBtn = document.querySelector("#reset");
+restartBtn.addEventListener("click", () => restartGame())
 
 function createBoard() {
     const rows = 3;
@@ -36,6 +36,7 @@ function checkWin(board) {
     let win = false;
     for (let i = 0; i < currentBoard.length; i++) { //check rows
         if (currentBoard[i][0] === currentBoard[i][1] && currentBoard[i][0] === currentBoard[i][2] && currentBoard[i][0] !== " ") {
+            gameRunning = false;
             win = true;
             return win;
         }
@@ -43,14 +44,17 @@ function checkWin(board) {
     for (let i = 0; i < currentBoard.length; i++) { // check columns
 
         if (currentBoard[0][i] === currentBoard[1][i] && currentBoard[0][i] === currentBoard[2][i] && currentBoard[0][i] !== " ") {
+            gameRunning = false;
             win = true;
             return win;
         }
     }
     if (currentBoard[0][0] === currentBoard[1][1] && currentBoard[0][0] === currentBoard[2][2] && currentBoard[0][0] !== " ") { // checking diagonal
+        gameRunning = false;
         win = true;
         return win;
     } else if (currentBoard[0][2] === currentBoard[1][1] && currentBoard[0][2] === currentBoard[2][0] && currentBoard[0][2] !== " ") { // checking diagonal
+        gameRunning = false;
         win = true;
         return win;
     }
@@ -65,26 +69,34 @@ function createPlayer(player1 = "Player .1", player2 = "Player .2") { //tworzy g
     ]; //zwraca dane pierwszego i drugiego gracza
 };
 
-function game() {
+function game(targetRow, targetColumn) {
+    if (!gameRunning) return;
+    let currentPlayer = players[(round - 1) % 2];
+    if (board.printBoard()[targetRow][targetColumn] === " ") {
+        board.updateBoard(targetRow, targetColumn, currentPlayer.tag);
+        displayBoardInConsole(board);
 
-    const tie = board.printBoard().every(row => row.every(cell => cell !== " "));
-    const players = createPlayer();
-    let currentPlayer = players[round % 2];
-    if (checkWin(board) === false) {
-        console.log(`Turn ${currentPlayer.name}`);
-        let row = parseInt(prompt("Wiersz 0-2"));
-        let column = parseInt(prompt("Kolumna 0-2"));
-        if (board.printBoard()[row][column] === " ") {
-            board.updateBoard(row, column, currentPlayer.tag);
-            round++;
-            displayBoardInConsole(board);
-        } else if (tie) {
-            console.log("Brak miejsc na planszy");
-            createBoard();
+        if (checkWin(board)) {
+            console.log(`${currentPlayer.name} wins!`);
+            userTurn.innerText = `Win player: ${currentPlayer.name}`;
+            gameRunning = false;
+            return;
         }
-        else {
-            console.log("To miejsce jest zajęte");
+
+        if (board.printBoard().every(row => row.every(cell => cell !== " "))) {
+            console.log("Gra zakończona remisem!");
+            userTurn.innerText = `Gra zakończona remisem!`;
+            gameRunning = false;
+            return;
         }
+
+        // Przełącz gracza po zakończeniu ruchu
+        round++;
+        console.log(`Teraz ruch gracza: ${currentPlayer.name}`);
+        userTurn.innerText = `Turn player: ${currentPlayer.name}`;
+
+    } else {
+        console.log("To pole jest już zajęte!");
     }
 }
 
@@ -104,4 +116,48 @@ function displayBoardInConsole(getedBoard) {
     console.log(` ${dL} | ${dC} | ${dR}`)
 }
 
+function gettingElementId() {
+    if (!gameRunning) {
+        return;
+    }
 
+    let targetRow;
+    let targetColumn;
+    const cells = document.querySelectorAll(".cell");
+    cells.forEach(cell => {
+        cell.addEventListener("click", (e) => {
+            if (!gameRunning) return;
+
+            targetRow = parseInt(e.target.id.charAt(0));
+            targetColumn = parseInt(e.target.id.charAt(1));
+
+            game(targetRow, targetColumn);
+            let player = players[round % 2];
+            cell.innerHTML = `<h3>${player.tag}</h3>`;
+            board.updateBoard(targetRow, targetColumn, player.tag);
+
+        });
+
+    });
+
+}
+
+function restartGame() {
+    const cells = document.querySelectorAll(".cell");
+    cells.forEach(cell => {
+        cell.innerHTML = " ";
+    });
+
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            board.updateBoard(i, j, " ");
+        }
+    }
+    board.printBoard();
+    gameRunning = true;
+    round = 1;
+    createBoard();
+}
+
+
+// Naprawa trwania gry, gettingElementId musi otrzymywać false przy zakończeniu
